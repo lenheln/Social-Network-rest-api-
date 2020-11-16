@@ -51,7 +51,7 @@ class UserServiceTest {
                 .id(1L)
                 .name("Name")
                 .surname("Surname")
-                .dateOfBDay(LocalDate.of(1987, 7, 21))
+                .dateOfBirth(LocalDate.of(1987, 7, 21))
                 .city(city)
                 .gender(Genders.F)
                 .interests("Nothing")
@@ -90,7 +90,7 @@ class UserServiceTest {
         UserEditDto userEditDto = UserEditDto.builder()
                 .name("New name")
                 .surname("New surname")
-                .dateOfBDay(LocalDate.of(1993, 3, 3))
+                .dateOfBirth(LocalDate.of(1993, 3, 3))
                 .city(newCity)
                 .gender(Genders.M)
                 .interests("New interests")
@@ -103,7 +103,7 @@ class UserServiceTest {
         Assertions.assertEquals(1L, user.getId());
         Assertions.assertEquals("New name", user.getName());
         Assertions.assertEquals("New surname", user.getSurname());
-        Assertions.assertEquals(LocalDate.of(1993,3,3), user.getDateOfBDay());
+        Assertions.assertEquals(LocalDate.of(1993,3,3), user.getDateOfBirth());
         Assertions.assertEquals(Genders.M, user.getGender());
         Assertions.assertEquals(newCity, user.getCity());
         Assertions.assertEquals("New interests", user.getInterests());
@@ -220,7 +220,7 @@ class UserServiceTest {
         UserRegisterDto userDto = UserRegisterDto.builder()
                 .name("Name")
                 .surname("Surname")
-                .dateOfBDay(LocalDate.of(1987, 7, 21))
+                .dateOfBirth(LocalDate.of(1987, 7, 21))
                 .city(city)
                 .gender(Genders.F)
                 .build();
@@ -229,7 +229,7 @@ class UserServiceTest {
 
         Assertions.assertEquals("Name", user.getName());
         Assertions.assertEquals("Surname", user.getSurname());
-        Assertions.assertEquals(LocalDate.of(1987, 7, 21), user.getDateOfBDay());
+        Assertions.assertEquals(LocalDate.of(1987, 7, 21), user.getDateOfBirth());
         Assertions.assertEquals(city, user.getCity());
         Assertions.assertEquals(Genders.F, user.getGender());
     }
@@ -246,7 +246,7 @@ class UserServiceTest {
         Assertions.assertEquals("Name Surname", userDto.getFio());
         Assertions.assertEquals(
                 Period.between(
-                        user.getDateOfBDay(),
+                        user.getDateOfBirth(),
                         LocalDate.now()
                 ).getYears(),
                 userDto.getAge()
@@ -264,7 +264,7 @@ class UserServiceTest {
         Assertions.assertEquals("Name Surname", userDto.getFio());
         Assertions.assertEquals(
                 Period.between(
-                        user.getDateOfBDay(),
+                        user.getDateOfBirth(),
                         LocalDate.now()
                 ).getYears(),
                 userDto.getAge()

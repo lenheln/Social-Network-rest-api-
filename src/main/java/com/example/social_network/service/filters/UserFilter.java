@@ -51,8 +51,8 @@ public class UserFilter {
 
         return Specification.where(getSpecificationByFio(fio))
                     .and(BaseSpecification.like("city", "name", city))
-                    .and(BaseSpecification.gt("age", minAge))
-                    .and(BaseSpecification.lt("age", maxAge))
+                    .and(BaseSpecification.gt("date_of_birth", minAge))
+                    .and(BaseSpecification.lt("date_of_birth", maxAge))
                     .and(BaseSpecification.equal("gender", gender));
     }
 

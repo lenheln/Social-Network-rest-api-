@@ -32,7 +32,7 @@ public class UserRegisterDto {
     @Length(min = 1, max = 45)
     private String surname;
 
-    private LocalDate dateOfBDay;
+    private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     private Genders gender;

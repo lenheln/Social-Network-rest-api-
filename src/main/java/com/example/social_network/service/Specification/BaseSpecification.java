@@ -90,7 +90,7 @@ public class BaseSpecification {
         return StringUtils.isEmpty(column) || min == null
                 ? null
                 : (root, query, cb) ->
-                cb.lessThanOrEqualTo(root.get("dateOfBDay"), LocalDate.now().minusYears(min));    }
+                cb.lessThanOrEqualTo(root.get("dateOfBirth"), LocalDate.now().minusYears(min));    }
 
     /**
      * Поиск сущностей, у которых значение поля больше меньше
@@ -103,7 +103,7 @@ public class BaseSpecification {
         return StringUtils.isEmpty(column) || max == null
                 ? null
                 : (root, query, cb) ->
-                cb.greaterThanOrEqualTo(root.get("dateOfBDay"), LocalDate.now().minusYears(max));
+                cb.greaterThanOrEqualTo(root.get("dateOfBirth"), LocalDate.now().minusYears(max));
     }
 
     /**

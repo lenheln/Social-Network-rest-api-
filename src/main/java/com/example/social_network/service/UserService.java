@@ -16,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -68,7 +65,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         if(userDto.getName() != null) { user.setName(userDto.getName()); }
         if(userDto.getSurname() != null) { user.setSurname(userDto.getSurname()); }
-        if(userDto.getDateOfBDay() != null) { user.setDateOfBDay(userDto.getDateOfBDay()); }
+        if(userDto.getDateOfBirth() != null) { user.setDateOfBirth(userDto.getDateOfBirth()); }
         if(userDto.getGender() != null) { user.setGender(userDto.getGender()); }
         if(userDto.getInterests() != null) { user.setInterests(userDto.getInterests()); }
         if(userDto.getCity() != null) { user.setCity(userDto.getCity());}
@@ -141,7 +138,7 @@ public class UserService {
         return User.builder()
                 .name(userDto.getName())
                 .surname(userDto.getSurname())
-                .dateOfBDay(userDto.getDateOfBDay())
+                .dateOfBirth(userDto.getDateOfBirth())
                 .gender(userDto.getGender())
                 .city(userDto.getCity())
                 .build();
@@ -158,7 +155,7 @@ public class UserService {
 
         return UserPageDto.builder()
                 .fio(String.format("%s %s", user.getName(), user.getSurname()))
-                .age(Period.between(user.getDateOfBDay(), LocalDate.now()).getYears())
+                .age(Period.between(user.getDateOfBirth(), LocalDate.now()).getYears())
                 .gender(user.getGender())
                 .interests(user.getInterests())
                 .city(cityService.convertToCityOnPageDto(user.getCity()))
@@ -184,7 +181,7 @@ public class UserService {
         return UserByListDto.builder()
                 .fio(String.format("%s %s", user.getName(), user.getSurname()))
                 .gender(user.getGender())
-                .age(Period.between(user.getDateOfBDay(), LocalDate.now()).getYears())
+                .age(Period.between(user.getDateOfBirth(), LocalDate.now()).getYears())
                 .build();
     }
 }

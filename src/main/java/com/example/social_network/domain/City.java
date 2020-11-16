@@ -28,6 +28,6 @@ public class City {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "regionid")
+    @JoinColumn(name = "region_id")
     private Region region;
 }

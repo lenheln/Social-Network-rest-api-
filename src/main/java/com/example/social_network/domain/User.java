@@ -5,13 +5,9 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.Year;
 import java.util.*;
 
 /**
@@ -42,8 +38,9 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
-    @Column(name = "dateofbday")
-    private LocalDate dateOfBDay;
+    @NotNull
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
@@ -54,13 +51,13 @@ public class User {
     private String interests;
 
     @ManyToOne
-    @JoinColumn(name="cityid")
+    @JoinColumn(name="city_id")
     private City city;
 
     @ManyToMany(cascade={CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name="friendship",
-            joinColumns={@JoinColumn(name="iduser")},
-            inverseJoinColumns={@JoinColumn(name="idfriend")})
+            joinColumns={@JoinColumn(name="id_user")},
+            inverseJoinColumns={@JoinColumn(name="id_friend")})
     private List<User> myFriends = new ArrayList<>();
 
     @ManyToMany(cascade={CascadeType.PERSIST}, mappedBy = "myFriends", fetch = FetchType.LAZY)
@@ -69,6 +66,6 @@ public class User {
     @Override
     public String toString(){
         return String.format("Name: %s, Surname: %s, Age: %d, Gender: %s, Interests: %s, City: %s \n",
-                name, surname, Period.between(LocalDate.now(), dateOfBDay).getYears(), gender, interests, city);
+                name, surname, Period.between(LocalDate.now(), dateOfBirth).getYears(), gender, interests, city);
     }
 }

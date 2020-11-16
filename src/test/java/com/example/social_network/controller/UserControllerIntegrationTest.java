@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.*;
 
 import java.time.LocalDate;
@@ -51,7 +50,7 @@ public class UserControllerIntegrationTest {
         UserRegisterDto userDto = UserRegisterDto.builder()
                 .name("Name")
                 .surname("Surname")
-                .dateOfBDay(LocalDate.of(1990, 3, 3))
+                .dateOfBirth(LocalDate.of(1990, 3, 3))
                 .gender(Genders.M)
                 .city(City.builder()
                         .id(34L)
@@ -135,7 +134,7 @@ public class UserControllerIntegrationTest {
         UserEditDto userDto = UserEditDto.builder()
                 .name("New name")
                 .surname("New surname")
-                .dateOfBDay(LocalDate.of(1950, 5,5))
+                .dateOfBirth(LocalDate.of(1950, 5,5))
                 .interests("Space")
                 .gender(Genders.M)
                 .city(City.builder().id(31L).name("г Санкт-Петербург").build())
@@ -155,7 +154,7 @@ public class UserControllerIntegrationTest {
 
         Assertions.assertEquals(updatedUser.getName(), "New name");
         Assertions.assertEquals(updatedUser.getSurname(), "New surname");
-        Assertions.assertEquals(updatedUser.getDateOfBDay(), LocalDate.of(1950, 5,5));
+        Assertions.assertEquals(updatedUser.getDateOfBirth(), LocalDate.of(1950, 5,5));
         Assertions.assertEquals(updatedUser.getInterests(), "Space");
         Assertions.assertEquals(updatedUser.getCity(), City.builder().id(31L).name("г Санкт-Петербург").build());
         Assertions.assertEquals(updatedUser.getGender(), Genders.M);
