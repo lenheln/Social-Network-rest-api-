@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class CityOnUserPageDto {
+public class CityDto {
     private String name;
     private String regionName;
 }

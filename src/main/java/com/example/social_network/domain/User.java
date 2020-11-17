@@ -23,37 +23,44 @@ import java.util.*;
 @Table(name = "users")
 public class User {
 
+    //Идентификатор пользователя
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //Имя
     @NotNull
     @Length(min = 1, max = 45)
     @Column(name = "name")
     private String name;
 
+    //Фамилия
     @NotNull
     @Length(min = 1, max = 45)
     @Column(name = "surname")
     private String surname;
 
-    @NotNull
+    //Дата рождения
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
+    //Пол
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Genders gender;
 
+    //Интересы
     @Length(max = 512)
     @Column(name = "interests")
     private String interests;
 
+    //Город
     @ManyToOne
     @JoinColumn(name="city_id")
     private City city;
 
+    //Список друзей пользвователя
     @ManyToMany(cascade={CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name="friendship",
             joinColumns={@JoinColumn(name="id_user")},

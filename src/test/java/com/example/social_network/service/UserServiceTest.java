@@ -237,7 +237,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Конвертирует сущность User в сущность UserPageDto")
     void convertToUserPageDto() {
-        CityOnUserPageDto cityDto = CityOnUserPageDto.builder()
+        CityDto cityDto = CityDto.builder()
                 .name("г Москва")
                 .build();
         Mockito.when(cityService.convertToCityOnPageDto(Mockito.any(City.class))).thenReturn(cityDto);

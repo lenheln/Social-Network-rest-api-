@@ -48,6 +48,7 @@ public class UserService {
      * @param id
      * @return страницу пользователя
      */
+    @Transactional(readOnly = true)
     public UserPageDto getUser(Long id) {
         User user = userRepository.findById(id).get();
         return convertToUserPageDto(user);
@@ -63,12 +64,12 @@ public class UserService {
 
     public void updateUser(UserEditDto userDto, Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        if(userDto.getName() != null) { user.setName(userDto.getName()); }
-        if(userDto.getSurname() != null) { user.setSurname(userDto.getSurname()); }
-        if(userDto.getDateOfBirth() != null) { user.setDateOfBirth(userDto.getDateOfBirth()); }
-        if(userDto.getGender() != null) { user.setGender(userDto.getGender()); }
-        if(userDto.getInterests() != null) { user.setInterests(userDto.getInterests()); }
-        if(userDto.getCity() != null) { user.setCity(userDto.getCity());}
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        user.setGender(userDto.getGender());
+        user.setInterests(userDto.getInterests());
+        user.setCity(userDto.getCity());
         userRepository.save(user);
     }
 
@@ -87,6 +88,7 @@ public class UserService {
      * @param id пользователя
      * @return сет друзей
      */
+    @Transactional(readOnly = true)
     public Page<UserByListDto> getFriends(Long id, FriendFilter filter, Pageable pageable){
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         filter.setUser(user);
@@ -122,6 +124,7 @@ public class UserService {
      * @param pageable настройки пагинации
      * @return список юзеров в виде {@UserByListDto}
      */
+    @Transactional(readOnly = true)
     public Page<UserByListDto> findAll(UserFilter filter, Pageable pageable) {
         return userRepository
                 .findAll(filter.toSpecification(), pageable)
@@ -138,9 +141,6 @@ public class UserService {
         return User.builder()
                 .name(userDto.getName())
                 .surname(userDto.getSurname())
-                .dateOfBirth(userDto.getDateOfBirth())
-                .gender(userDto.getGender())
-                .city(userDto.getCity())
                 .build();
     }
 
@@ -154,11 +154,12 @@ public class UserService {
     public UserPageDto convertToUserPageDto(User user) {
 
         return UserPageDto.builder()
+                .id(user.getId())
                 .fio(String.format("%s %s", user.getName(), user.getSurname()))
-                .age(Period.between(user.getDateOfBirth(), LocalDate.now()).getYears())
                 .gender(user.getGender())
+                .age(user.getDateOfBirth())
                 .interests(user.getInterests())
-                .city(cityService.convertToCityOnPageDto(user.getCity()))
+                .city(cityService.convertToCityDto(user.getCity()))
                 .friends(Stream.concat(
                         user.getMyFriends().stream(),
                         user.getFriendsOfMine().stream()
@@ -179,9 +180,10 @@ public class UserService {
      */
     public UserByListDto convertToUserByListDto(User user){
         return UserByListDto.builder()
+                .id(user.getId())
                 .fio(String.format("%s %s", user.getName(), user.getSurname()))
                 .gender(user.getGender())
-                .age(Period.between(user.getDateOfBirth(), LocalDate.now()).getYears())
+                .age(user.getDateOfBirth())
                 .build();
     }
 }

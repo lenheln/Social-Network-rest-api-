@@ -31,11 +31,4 @@ public class UserRegisterDto {
     @NotNull
     @Length(min = 1, max = 45)
     private String surname;
-
-    private LocalDate dateOfBirth;
-
-    @Enumerated(EnumType.STRING)
-    private Genders gender;
-
-    private City city;
 }

@@ -23,6 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,22 +40,17 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * Создание учетной записи пользователя. Сохраняет пользователя в базе данных
+     * Получение страницы пользователя по его id
      *
-     * @param userDto данные пользователя в виде Dto
-     * @return Сообщение - результат операции и статус ответа
+     * @param id пользователя
+     * @return страницу пользователя с заданным id и статус ответа
      */
-    @PostMapping
-    @ApiOperation("Создание учетной записи пользователя. Сохраняет пользователя в базе данных")
-    public ResponseEntity createPage(@RequestBody @Valid UserRegisterDto userDto) throws Exception {
+    @GetMapping("{id}")
+    @ApiOperation("Получение страницы пользователя по его id")
+    public UserPageDto getPage(@PathVariable Long id) {
 
-        Long id = userService.save(userDto);
-        log.info("Register new user={}", userDto.toString());
-
-        return new ResponseEntity(
-                String.format("User with id = %d created", id),
-                HttpStatus.CREATED
-        );
+        log.info("Get page of user with id={}", id);
+        return userService.getUser(id);
     }
 
     /**
@@ -66,88 +62,10 @@ public class UserController {
      */
     @GetMapping()
     @ApiOperation("Поиск пользователей с помощью фильтра")
-    public ResponseEntity getUsers(UserFilter filter,
+    public Page<UserByListDto> getUsers(UserFilter filter,
                                         @ApiIgnore @PageableDefault(size = 5) Pageable pageable) {
-
-        Page<UserByListDto> page = userService.findAll(filter, pageable);
         log.info("Get list of users");
-
-        return new ResponseEntity(page, HttpStatus.OK);
-    }
-
-    /**
-     * Получение страницы пользователя по его id
-     *
-     * @param id пользователя
-     * @return страницу пользователя с заданным id и статус ответа
-     */
-    @GetMapping("{id}")
-    @ApiOperation("Получение страницы пользователя по его id")
-    public ResponseEntity getPage(@PathVariable Long id) {
-
-        log.info("Get page of user with id={}", id);
-        UserPageDto userDto = userService.getUser(id);
-
-        return new ResponseEntity(userDto, HttpStatus.OK);
-    }
-
-    /**
-     * Обновление полей на странице пользователя
-     *
-     * @param userDto данные пользователя
-     * @param id      пользователя
-     * @return Сообщение - результат операции и статус ответа
-     */
-    @PatchMapping("{id}")
-    @ApiOperation("Обновление полей на странице пользователя")
-    public ResponseEntity updatePage(@RequestBody @Valid UserEditDto userDto, @PathVariable Long id) {
-
-        userService.updateUser(userDto, id);
-        log.info("Update following info {} about user with id={}", userDto, id);
-
-        return new ResponseEntity(
-                String.format("User with id = %d updated", id),
-                HttpStatus.OK
-        );
-    }
-
-    /**
-     * Удаление страницы пользователя с указанным id
-     *
-     * @param id пользователя
-     * @return Сообщение - результат операции и статус ответа
-     */
-    @DeleteMapping("{id}")
-    @ApiOperation("Удаление страницы пользователя с указанным id")
-    public ResponseEntity deletePage(@PathVariable Long id) {
-
-        userService.delete(id);
-        log.info("Delete user with id={}", id);
-
-        return new ResponseEntity(
-                String.format("User with id = %d deleted", id),
-                HttpStatus.OK
-        );
-    }
-
-    /**
-     * Добавление друга пользователю с userId
-     *
-     * @param userId   идентификатор пользователя
-     * @param friendId идентификатор друга
-     * @return Сообщение - результат операции и статус ответа
-     */
-    @PutMapping("/{userId}/add")
-    @ApiOperation("Добавление друга пользователю с userId")
-    public ResponseEntity addFriend(@PathVariable Long userId, @RequestParam Long friendId) {
-
-        userService.addFriend(userId, friendId);
-        log.info("Create friendship of users id = {} and id = {}", userId, friendId);
-
-        return new ResponseEntity(
-                String.format("User with id = %d added as a friend", friendId),
-                HttpStatus.OK
-        );
+        return userService.findAll(filter, pageable);
     }
 
     /**
@@ -160,14 +78,60 @@ public class UserController {
      */
     @GetMapping("/{userId}/friends")
     @ApiOperation("Получение списка друзей пользователя с помощью фильтра")
-    public ResponseEntity getFriends(@PathVariable Long userId,
+    public Page<UserByListDto> getFriends(@PathVariable Long userId,
                                           FriendFilter filter,
                                           @ApiIgnore @PageableDefault(size = 5) Pageable pageable) {
 
-        Page<UserByListDto> page = userService.getFriends(userId, filter, pageable);
         log.info("Get list of friends for user with id = {}", userId);
+        return userService.getFriends(userId, filter, pageable);
+    }
 
-        return new ResponseEntity(page, HttpStatus.OK);
+
+    /**
+     * Создание учетной записи пользователя. Сохраняет пользователя в базе данных
+     *
+     * @param userDto данные пользователя в виде Dto
+     * @return Сообщение - результат операции и статус ответа
+     */
+    @PostMapping
+    @ApiOperation("Создание учетной записи пользователя. Сохраняет пользователя в базе данных")
+    public Long createPage(@RequestBody @Valid UserRegisterDto userDto) throws Exception {
+
+        log.info("Register new user={}", userDto.toString());
+        return userService.save(userDto);
+    }
+
+    /**
+     * Обновление полей на странице пользователя
+     *
+     * @param userDto данные пользователя
+     * @param id      пользователя
+     * @return Сообщение - результат операции и статус ответа
+     */
+    @PutMapping("{id}")
+    @ApiOperation("Обновление полей на странице пользователя")
+    public Long updatePage(@RequestBody @Valid UserEditDto userDto, @PathVariable Long id) {
+
+        getPage(id);
+        userService.updateUser(userDto, id);
+        log.info("Update following info {} about user with id={}", userDto, id);
+        return id;
+    }
+
+    /**
+     * Добавление друга пользователю с userId
+     *
+     * @param userId   идентификатор пользователя
+     * @param friendId идентификатор друга
+     * @return Сообщение - результат операции и статус ответа
+     */
+    @PutMapping("/{userId}/add")
+    @ApiOperation("Добавление друга пользователю с userId")
+    public Long addFriend(@RequestParam Long friendId, @PathVariable Long userId) {
+
+        userService.addFriend(userId, friendId);
+        log.info("Create friendship of users id = {} and id = {}", userId, friendId);
+        return userId;
     }
 
     /**
@@ -179,16 +143,27 @@ public class UserController {
      */
     @PutMapping("/{userId}/friends/delete")
     @ApiOperation("Удаление друга из списка друзей")
-    public ResponseEntity deleteFriend(@PathVariable Long userId, @RequestParam Long friendId){
+    public void deleteFriend(@PathVariable Long userId, @RequestParam Long friendId){
 
         userService.deleteFriend(userId, friendId);
         log.info("Delete friendship of users id = {} and id = {}", userId, friendId);
-
-        return new ResponseEntity(
-                String.format("User with id = %d deleted from friends", friendId),
-                HttpStatus.OK
-        );
     }
+
+
+    /**
+     * Удаление страницы пользователя с указанным id
+     *
+     * @param id пользователя
+     * @return Сообщение - результат операции и статус ответа
+     */
+    @DeleteMapping("{id}")
+    @ApiOperation("Удаление страницы пользователя с указанным id")
+    public void deletePage(@PathVariable Long id) {
+
+        log.info("Delete user with id={}", id);
+        userService.delete(id);
+    }
+
 
     /**
      * Обработчик ошибок валидации полей

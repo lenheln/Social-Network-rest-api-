@@ -1,18 +1,13 @@
 package com.example.social_network.dto;
 
-import com.example.social_network.domain.City;
 import com.example.social_network.utils.Genders;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 public class UserPageDto {
 
+    private Long id;
+
     private String fio;
 
     private Integer age;
@@ -34,7 +31,19 @@ public class UserPageDto {
 
     private String interests;
 
-    private CityOnUserPageDto city;
+    private CityDto city;
 
     private List<UserByListDto> friends = new ArrayList<>();
+
+    public static class UserPageDtoBuilder{
+        private Integer age;
+
+        public UserPageDtoBuilder age(LocalDate dateOfBirth){
+            this.age = (dateOfBirth == null)
+                    ? null
+                    : Period.between(dateOfBirth, LocalDate.now()).getYears();
+            return this;
+        }
+    }
 }
+

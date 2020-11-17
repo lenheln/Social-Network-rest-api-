@@ -67,26 +67,23 @@ public class UserFilter {
         if(fio != null) {
             fio = KeyboardConverter.convert(fio);
             String[] fioPartly = fio.split(" ");
-            return appendSpecifications(fioPartly.length-1, fioPartly);
-
+            return appendSpecifications(fioPartly);
         } else { return null; }
     }
 
     /**
      * Составляет единую спецификацию для всех слов из поля fio
      *
-     * @param i порядковый номер токена
      * @param fio массив токенов на которые разбито поле fio
      * @return единую спецификацию
      */
-    public Specification<User> appendSpecifications(int i, String[] fio) {
-        while(i > 0) {
-            return appendSpecifications(i - 1, fio)
-                    .and(createBaseSpecification(fio[i]));
+    public Specification<User> appendSpecifications(String[] fio) {
+
+        Specification<User> specification = Specification.where(createBaseSpecification(fio[0]));
+        for (int i = 1; i < fio.length; i++) {
+            specification = specification.and(createBaseSpecification(fio[i]));
         }
-        return Specification.where(
-                createBaseSpecification(fio[0])
-        );
+        return specification;
     }
 
     /**

@@ -23,6 +23,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEditDto {
+
     @Length(min = 1 , max = 45)
     private String name;
 

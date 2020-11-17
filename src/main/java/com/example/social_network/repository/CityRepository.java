@@ -24,4 +24,14 @@ import java.util.List;
  */
 @Repository
 public interface CityRepository extends JpaRepository<City, Long>, JpaSpecificationExecutor<City> {
+
+    /**
+     * Поиск города по вхождению строки
+     *
+     * @param name поисковый запрос
+     * @param pageable пагинация
+     * @return страница с городами
+     */
+
+    Page<City> findByNameContainsIgnoreCase(String name, Pageable pageable);
 }
