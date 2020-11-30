@@ -119,4 +119,19 @@ public class BaseSpecification {
             return cb.or(userPr,friendPr);
         };
     }
+
+    /**
+     * Поиск сущностей, которых нет в друзьях у данного пользователя
+     *
+     * @param user текущий пользователь
+     * @return спецификация
+     */
+    public static Specification<User> notFriend(User user){
+        return (root, query, cb) -> {
+            Predicate userPr = cb.isMember(user, root.get("friendsOfMine"));
+            Predicate friendPr = cb.isMember(user, root.get("myFriends"));
+            Predicate selfUser = cb.equal(root, user);
+            return cb.not(cb.or(userPr, friendPr, selfUser));
+        };
+    }
 }

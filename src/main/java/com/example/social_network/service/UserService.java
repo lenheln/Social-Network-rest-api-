@@ -7,6 +7,7 @@ import com.example.social_network.dto.UserPageDto;
 import com.example.social_network.dto.UserRegisterDto;
 import com.example.social_network.repository.UserRepository;
 import com.example.social_network.service.filters.FriendFilter;
+import com.example.social_network.service.filters.BaseFilter;
 import com.example.social_network.service.filters.UserFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -125,7 +124,9 @@ public class UserService {
      * @return список юзеров в виде {@UserByListDto}
      */
     @Transactional(readOnly = true)
-    public Page<UserByListDto> findAll(UserFilter filter, Pageable pageable) {
+    public Page<UserByListDto> findAll(Long userId, UserFilter filter, Pageable pageable) {
+        User user = userRepository.findById(userId).get();
+        filter.setUser(user);
         return userRepository
                 .findAll(filter.toSpecification(), pageable)
                 .map(this::convertToUserByListDto);

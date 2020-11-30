@@ -60,7 +60,7 @@ public class User {
     @JoinColumn(name="city_id")
     private City city;
 
-    //Список друзей пользвователя
+    //Список друзей пользователя
     @ManyToMany(cascade={CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name="friendship",
             joinColumns={@JoinColumn(name="id_user")},

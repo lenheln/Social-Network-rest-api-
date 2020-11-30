@@ -7,7 +7,7 @@ import com.example.social_network.dto.UserPageDto;
 import com.example.social_network.dto.UserRegisterDto;
 import com.example.social_network.service.UserService;
 import com.example.social_network.service.filters.FriendFilter;
-import com.example.social_network.service.filters.UserFilter;
+import com.example.social_network.service.filters.BaseFilter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,18 +60,18 @@ class UserControllerUnitTest {
         Page<UserByListDto> dtoPage = new PageImpl<UserByListDto>(listDtos);
 
         Mockito.when(userService.findAll(
-                Mockito.any(UserFilter.class),
+                Mockito.any(BaseFilter.class),
                 Mockito.any(Pageable.class)
         )).thenReturn(dtoPage);
 
         Pageable pageable =  Pageable.unpaged();
-        ResponseEntity answer = userController.getUsers(new UserFilter(), pageable);
+        ResponseEntity answer = userController.getUsers(new BaseFilter(), pageable);
 
         Assertions.assertEquals(200, answer.getStatusCodeValue());
         Assertions.assertEquals(dtoPage, answer.getBody());
 
         Mockito.verify(userService, Mockito.times(1)).findAll(
-                Mockito.any(UserFilter.class),
+                Mockito.any(BaseFilter.class),
                 Mockito.any(Pageable.class)
         );
         Mockito.verifyNoMoreInteractions(userService);

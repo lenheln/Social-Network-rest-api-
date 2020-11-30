@@ -5,7 +5,7 @@ import com.example.social_network.domain.User;
 import com.example.social_network.dto.*;
 import com.example.social_network.repository.UserRepository;
 import com.example.social_network.service.filters.FriendFilter;
-import com.example.social_network.service.filters.UserFilter;
+import com.example.social_network.service.filters.BaseFilter;
 import com.example.social_network.utils.Genders;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -200,7 +200,7 @@ class UserServiceTest {
         Page usersDtoPage = new PageImpl<>(usersDto);
 
         Pageable pageable =  Pageable.unpaged();
-        Assertions.assertEquals(usersDtoPage, userService.findAll(new UserFilter(), pageable));
+        Assertions.assertEquals(usersDtoPage, userService.findAll(new BaseFilter(), pageable));
 
         Mockito.verify(userRepository, Mockito.times(1)).findAll(
                 Mockito.any(Specification.class),

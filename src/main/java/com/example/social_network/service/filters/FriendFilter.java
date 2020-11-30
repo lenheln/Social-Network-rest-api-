@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @Setter
 @AllArgsConstructor
-public class FriendFilter extends UserFilter {
+public class FriendFilter extends BaseFilter {
 
     private User user;
 

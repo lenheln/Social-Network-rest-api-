@@ -6,6 +6,7 @@ import com.example.social_network.dto.UserPageDto;
 import com.example.social_network.dto.UserRegisterDto;
 import com.example.social_network.service.UserService;
 import com.example.social_network.service.filters.FriendFilter;
+import com.example.social_network.service.filters.BaseFilter;
 import com.example.social_network.service.filters.UserFilter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -56,16 +55,18 @@ public class UserController {
     /**
      * Поиск пользователей с помощью фильтра
      *
+     * @param userId идентификатор пользователя от лица которого осуществляется поиск
      * @param filter настройки фильтрации
      * @param pageable настройки пагинации
      * @return список пользователей удовлетворяющих условиям фильтра и статус ответа
      */
-    @GetMapping()
+    @GetMapping("/{userId}/users")
     @ApiOperation("Поиск пользователей с помощью фильтра")
-    public Page<UserByListDto> getUsers(UserFilter filter,
+    public Page<UserByListDto> getUsers(@PathVariable Long userId,
+                                        UserFilter filter,
                                         @ApiIgnore @PageableDefault(size = 5) Pageable pageable) {
         log.info("Get list of users");
-        return userService.findAll(filter, pageable);
+        return userService.findAll(userId, filter, pageable);
     }
 
     /**
